@@ -12,7 +12,7 @@ const Home = () => {
   const features: ReadonlyArray<Feature> = [
     {
       icon: <Wallet className="w-8 h-8 text-primary-500" />,
-      title: "Controle Financeiro",
+      title: "Controle financeiro",
       description:
         "Monitore suas despesas e receitas em um só lugar, com uma interface intuitiva e fácil de usar.",
     },
@@ -23,12 +23,12 @@ const Home = () => {
     },
     {
       icon: <List className="w-8 h-8 text-primary-700" />,
-      title: "Categorias Personalizadas",
+      title: "Categorias personalizadas",
       description: "Organize suas transações em categorias para melhor análise.",
     },
     {
       icon: <CreditCard className="w-8 h-8 text-primary-700" />,
-      title: "Transações Ilimitadas",
+      title: "Transações ilimitadas",
       description:
         "Adicione quantas transações quiser e mantenha um histórico completo de suas finanças.",
     },
@@ -74,6 +74,20 @@ const Home = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section className="py-12 md:py-20">
+          <div className="bg-gray-900 p-8 md:p-12 rounded-xl text-center border border-gray-700">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Pronto para organizar suas finanças?
+            </h2>
+            <p className="text-white text-opacity-90 max-w-2xl mx-auto mb-8">
+              Comece a usar o DevBills hoje mesmo e tenha o controle total sobre seu dinheiro. É
+              gratuito e fácil de usar!
+            </p>
+
+            <Button className="mx-auto px-6 py-3">Criar conta gratuita</Button>
           </div>
         </section>
       </div>
