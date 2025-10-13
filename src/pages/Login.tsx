@@ -1,13 +1,13 @@
-import { signInWithPopup } from "firebase/auth";
 import GoogleLoginButton from "../components/GoogleLoginButton";
-
-import { firebaseAuth, googleAuthProvider } from "../config/firebase";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  const handleLogin = async () => {
-    const result = await signInWithPopup(firebaseAuth, googleAuthProvider);
+  const { signWithGoogle } = useAuth();
 
-    console.log(result);
+  const handleLogin = async () => {
+    try {
+      await signWithGoogle();
+    } catch (_err) {}
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
