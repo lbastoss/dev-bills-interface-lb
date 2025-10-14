@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthContext";
 
 const PrivateRoutes = () => {
   const { authState } = useAuth();
-  console.log(authState);
   if (!authState.user) {
     return <Navigate to="login" replace />;
   }
