@@ -56,7 +56,7 @@ const MonthYearSelect = ({ month, year, onMonthChange, onYearChange }: MonthYear
 
       <div className="flex gap-4">
         <label htmlFor="month-select" className="sr-only">
-          Selecionar mês anterior
+          Selecionar mês
         </label>
         {/** biome-ignore lint/correctness/useUniqueElementIds: false positive */}
         <select
