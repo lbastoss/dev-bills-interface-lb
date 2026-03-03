@@ -12,7 +12,7 @@ api.interceptors.request.use(
 
     if (user) {
       try {
-        const token = await user.getIdToken();
+        const token = await user.getIdToken(true);
         config.headers.set("Authorization", `Bearer ${token}`);
       } catch (err) {
         console.error("error getting user token from firebase", err);
