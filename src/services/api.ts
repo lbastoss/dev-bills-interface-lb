@@ -8,7 +8,14 @@ export const api: AxiosInstance = axios.create({
 
 api.interceptors.request.use(
   async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-    const user = firebaseAuth.currentUser;
+    const user =
+      firebaseAuth.currentUser ??
+      (await new Promise((resolve) => {
+        const unsubscribe = firebaseAuth.onAuthStateChanged((u) => {
+          unsubscribe();
+          resolve(u);
+        });
+      }));
 
     if (user) {
       try {
