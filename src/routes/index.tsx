@@ -4,6 +4,8 @@ import AppLayout from "../layout/AppLayout";
 import Dashboard from "../pages/dashboard";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
+import Transactions from "../pages/Transactions";
+import TransactionsForm from "../pages/TransactionsForm";
 import PrivateRoutes from "./PrivateRoutes";
 
 const AppRoutes = () => {
@@ -17,6 +19,8 @@ const AppRoutes = () => {
           <Route element={<PrivateRoutes />}>
             <Route element={<AppLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/transaçoes" element={<Transactions />} />
+              <Route path="/transaçoes/nova" element={<TransactionsForm />} />
             </Route>
           </Route>
 
