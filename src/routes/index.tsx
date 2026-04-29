@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router";
+
+import { ToastContainer, type ToastContainerProps } from "react-toastify";
 import { AuthProvider } from "../context/AuthContext";
 import AppLayout from "../layout/AppLayout";
 import Dashboard from "../pages/dashboard";
@@ -9,6 +11,18 @@ import TransactionsForm from "../pages/TransactionsForm";
 import PrivateRoutes from "./PrivateRoutes";
 
 const AppRoutes = () => {
+  const toastConfig: ToastContainerProps = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    newestOnTop: true,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    draggable: true,
+    pauseOnHover: true,
+    theme: "colored",
+  };
+
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -26,6 +40,7 @@ const AppRoutes = () => {
 
           <Route path="*" element={<h2>Not Found</h2>} />
         </Routes>
+        <ToastContainer {...toastConfig} />
       </AuthProvider>
     </BrowserRouter>
   );
