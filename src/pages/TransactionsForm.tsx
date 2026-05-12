@@ -58,14 +58,14 @@ const TransactionsForm = () => {
   const handleSubmit = () => {};
 
   return (
-    <div>
-      <div>
-        <h1>Transaction Form</h1>
+    <div className="container-app py-8">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-2xl font-bold mb-6">Nova transação</h1>
 
         <Card>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor={formId}>Tipo de despesa</label>
+            <div className="mb-4 flex gap-2 flex-col">
+              <label htmlFor={formId}>Tipo de transação</label>
               <TransactionTypeSelector
                 id={formId}
                 value={formData.type}
