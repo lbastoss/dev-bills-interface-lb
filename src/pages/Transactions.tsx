@@ -1,6 +1,6 @@
 import { AlertCircle, ArrowDown, ArrowUp, Plus, Search, Trash2 } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { toast } from "react-toastify";
 import Button from "../components/Button";
 import Card from "../components/Card";
@@ -11,9 +11,16 @@ import { type Transaction, TransactionType } from "../types/Transactions";
 import { formatCurrency, formatDate } from "../utils/formatter";
 
 const Transactions = () => {
+  const [searchParams] = useSearchParams();
+
   const currentDate = new Date();
-  const [year, setYear] = useState<number>(currentDate.getFullYear());
-  const [month, setMonth] = useState<number>(currentDate.getMonth() + 1);
+
+  const initialMonth = Number(searchParams.get("month")) || currentDate.getMonth() + 1;
+
+  const initialYear = Number(searchParams.get("year")) || currentDate.getFullYear();
+
+  const [year, setYear] = useState<number>(initialYear);
+  const [month, setMonth] = useState<number>(initialMonth);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -42,7 +49,7 @@ const Transactions = () => {
       setDeletingId(id);
       await deleteTransactions(id);
       toast.success("Transação excluída com sucesso.");
-      setTransactions((prev) => prev.filter((t) => t.id !== id));
+      setFilteredTransactions((prev) => prev.filter((t) => t.id !== id));
     } catch (err) {
       console.error(err);
       toast.error("Erro ao excluir transação, tente novamente.");
@@ -93,7 +100,6 @@ const Transactions = () => {
           onMonthChange={setMonth}
           onYearChange={setYear}
         />
-        s
       </Card>
 
       <Card className="mb-6">

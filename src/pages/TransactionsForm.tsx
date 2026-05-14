@@ -34,6 +34,8 @@ const TransactionsForm = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const formId = useId();
   const navigate = useNavigate();
 
@@ -48,13 +50,28 @@ const TransactionsForm = () => {
   const filteredCategories = categories.filter((category) => category.type === formData.type);
 
   const validadeForm = (): boolean => {
-    if (!formData.description || !formData.amount || !formData.date || !formData.categoryId) {
-      setError("Preencha todos os campos.");
-      return false;
+    const errors: Record<string, string> = {};
+
+    if (!formData.description.trim()) {
+      errors.description = "Descrição obrigatória";
     }
 
-    if (formData.amount <= 0) {
-      setError("O valor deve ser maior que zero.");
+    if (!formData.amount || formData.amount <= 0) {
+      errors.amount = "Valor deve ser maior que zero";
+    }
+
+    if (!formData.date) {
+      errors.date = "Data obrigatória";
+    }
+
+    if (!formData.categoryId) {
+      errors.categoryId = "Selecione uma categoria";
+    }
+
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setError("Preencha corretamente os campos obrigatórios.");
       return false;
     }
 
@@ -74,10 +91,15 @@ const TransactionsForm = () => {
       ...prev,
       [name]: name === "amount" ? (value === "" ? 0 : Number(value)) : value,
     }));
+    setFieldErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
   };
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
+    setLoading(true);
     setError(null);
 
     try {
@@ -90,14 +112,23 @@ const TransactionsForm = () => {
         amount: formData.amount,
         categoryId: formData.categoryId,
         type: formData.type,
-        date: new Date(formData.date).toISOString(),
+        date: `${formData.date}T12:00:00.000Z`,
       };
 
       await createTransaction(transactionData);
+
+      const transactionDate = new Date(formData.date);
+
+      const month = transactionDate.getMonth() + 1;
+      const year = transactionDate.getFullYear();
+
       toast.success("Transação criada com sucesso!");
-      navigate("/transaçoes");
+
+      navigate(`/transaçoes?month=${month}&year=${year}`);
     } catch (_err) {
       toast.error("Ocorreu um erro ao criar a transação.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -134,6 +165,7 @@ const TransactionsForm = () => {
               value={formData.description}
               onChange={handleChange}
               placeholder="Ex: supermercado, salário, etc..."
+              className={fieldErrors.description ? "border-red-500" : ""}
             />
 
             <Input
@@ -145,6 +177,7 @@ const TransactionsForm = () => {
               onChange={handleChange}
               placeholder="R$ 0,00"
               icon={<DollarSign className="w-4 h-4" />}
+              className={fieldErrors.amount ? "border-red-500" : ""}
             />
 
             <Input
@@ -154,6 +187,7 @@ const TransactionsForm = () => {
               value={formData.date}
               onChange={handleChange}
               icon={<Calendar className="w-4 h-4" />}
+              className={fieldErrors.date ? "border-red-500" : ""}
             />
 
             <Select
@@ -169,17 +203,25 @@ const TransactionsForm = () => {
                   label: category.name,
                 })),
               ]}
+              className={fieldErrors.categoryId ? "border-red-500" : ""}
             />
 
             <div className="flex justify-end space-x-3 mt-2">
-              <Button variant="outline" onClick={handleCancel} type="button">
+              <Button variant="outline" onClick={handleCancel} type="button" disabled={loading}>
                 Cancelar
               </Button>
               <Button
                 type="submit"
                 variant={formData.type === TransactionType.EXPENSE ? "danger" : "success"}
+                disabled={loading}
               >
-                <Save className="w-4 h-4 mr-2" />
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-4 h-4 border-4 border-gray-700 border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : (
+                  <Save className="w-4 h-4 mr-2" />
+                )}
                 Salvar
               </Button>
             </div>
