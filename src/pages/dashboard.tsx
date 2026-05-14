@@ -181,7 +181,7 @@ const Dashboard = () => {
                     labelStyle={{ color: "#f8f8f8" }}
                   />
                   <Legend />
-                  <Bar dataKey="expense" name="Despesas" fill="#ff6384" />
+                  <Bar dataKey="expenses" name="Despesas" fill="#ff6363" />
                   <Bar dataKey="income" name="Receitas" fill="#37e359" />
                 </BarChart>
               </ResponsiveContainer>

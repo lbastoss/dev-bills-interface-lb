@@ -6,7 +6,7 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import Input from "../components/Input";
 import MonthYearSelect from "../components/MonthYearSelect";
-import { deteleTransactions, getTransactions } from "../services/transactionService";
+import { deleteTransactions, getTransactions } from "../services/transactionService";
 import { type Transaction, TransactionType } from "../types/Transactions";
 import { formatCurrency, formatDate } from "../utils/formatter";
 
@@ -40,7 +40,7 @@ const Transactions = () => {
   const handleDelete = async (id: string): Promise<void> => {
     try {
       setDeletingId(id);
-      await deteleTransactions(id);
+      await deleteTransactions(id);
       toast.success("Transação excluída com sucesso.");
       setTransactions((prev) => prev.filter((t) => t.id !== id));
     } catch (err) {
@@ -93,6 +93,7 @@ const Transactions = () => {
           onMonthChange={setMonth}
           onYearChange={setYear}
         />
+        s
       </Card>
 
       <Card className="mb-6">

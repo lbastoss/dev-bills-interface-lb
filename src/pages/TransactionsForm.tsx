@@ -1,14 +1,16 @@
 import { AlertCircle, Calendar, DollarSign, Save, Tag } from "lucide-react";
 import { type ChangeEvent, type FormEvent, useEffect, useId, useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "react-toastify";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import Input from "../components/Input";
 import Select from "../components/Select";
 import TransactionTypeSelector from "../components/TransactionTypeSelector";
 import { getCategories } from "../services/categoryService";
+import { createTransaction } from "../services/transactionService";
 import type { Category } from "../types/category";
-import { TransactionType } from "../types/Transactions";
+import { type CreateTransactionDTO, TransactionType } from "../types/Transactions";
 
 interface FormData {
   description: string;
@@ -16,7 +18,7 @@ interface FormData {
   type: TransactionType;
   date: string;
   category: string;
-  categoryId?: string;
+  categoryId: string;
 }
 
 const initialFormData = {
@@ -25,6 +27,7 @@ const initialFormData = {
   type: TransactionType.EXPENSE,
   date: "",
   category: "",
+  categoryId: "",
 };
 
 const TransactionsForm = () => {
@@ -47,6 +50,7 @@ const TransactionsForm = () => {
   const validadeForm = (): boolean => {
     if (!formData.description || !formData.amount || !formData.date || !formData.categoryId) {
       setError("Preencha todos os campos.");
+      return false;
     }
 
     if (formData.amount <= 0) {
@@ -68,19 +72,33 @@ const TransactionsForm = () => {
     const { name, value } = event.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "amount" ? (value === "" ? 0 : Number(value)) : value,
     }));
   };
 
   const handleSubmit = async (event: FormEvent): Promise<void> => {
     event.preventDefault();
+    setError(null);
 
     try {
       if (!validadeForm()) {
         return;
       }
-    } catch (_err) {}
-    console.log(event);
+
+      const transactionData: CreateTransactionDTO = {
+        description: formData.description,
+        amount: formData.amount,
+        categoryId: formData.categoryId,
+        type: formData.type,
+        date: new Date(formData.date).toISOString(),
+      };
+
+      await createTransaction(transactionData);
+      toast.success("Transação criada com sucesso!");
+      navigate("/transaçoes");
+    } catch (_err) {
+      toast.error("Ocorreu um erro ao criar a transação.");
+    }
   };
 
   const handleCancel = () => {
